@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import thunk from "redux-thunk";
 import { MoralisProvider } from "react-moralis";
+import "./index.css";
 
 import rootReducer from "./reducers";
 
