@@ -3,6 +3,7 @@ import { Switch, Route, useLocation } from 'react-router-dom';
 
 import Nav from "./components/Nav";
 import Home from './pages/Home';
+import SpeedDials from './components/SpeedDial';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Home />
         </Route>
       </Switch>
+      <SpeedDials />
     </div>
   );
 }

@@ -39,7 +39,7 @@ const Home = () => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <img src={HomeImage} alt="painter" style={{ height: '60.4rem', width: '100%' }} />
+            <img src={HomeImage} alt="painter" style={{ height: '91.6vh', width: '100%' }} />
             <Container>
                 <Container className={classes.textContainer}>NFT Market</Container>
                 <Container className={classes.buttonContainer}>
