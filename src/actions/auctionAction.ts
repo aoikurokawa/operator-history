@@ -48,7 +48,7 @@ export const auctionContractHandler = (_tokenId: string) => async (dispatch: any
         });
 };
 
-export const auctionStartAction = (_tokenId: string, _auctionTimeEnd: number, _objectId: string) => async (dispatch: any) => {
+export const auctionStartAction = (_tokenId: string, _auctionTimeEnd: any, _objectId: string) => async (dispatch: any) => {
     const { contractInstance, accounts } = await loadBlockchain();
 
     const date = Math.round(new Date(_auctionTimeEnd).getTime() / 1000.0);

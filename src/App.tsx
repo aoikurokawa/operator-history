@@ -7,6 +7,7 @@ import Auction from './pages/Auction';
 import AuctionDetail from './pages/AuctionDetail';
 import SpeedDials from './components/SpeedDial';
 import UploadPage from './pages/UploadPage';
+import MyPage from './pages/MyPage';
 
 
 
@@ -28,6 +29,9 @@ function App() {
         </Route>
         <Route path="/upload" exact>
           <UploadPage />
+        </Route>
+        <Route path="/mypage" exact>
+          <MyPage />
         </Route>
       </Switch>
       <SpeedDials />
