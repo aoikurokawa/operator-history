@@ -4,6 +4,7 @@ const initialState = {
     ipfsHash: "", 
     ipfsUrl: "", 
     name: "",
+    nftArray: [],
     nftDetail: {},
 }
 
@@ -31,6 +32,12 @@ const artTokenReducer = (state = initialState, action: any) => {
                 ipfsUrl: "", 
                 name: "",
             };
+
+        case "GET_MORALISNFTDATA":
+            return {
+                ...state,
+                nftArray: action.nftArray,
+            }
 
         case "MOVE_AUCTIONDETAIL":
             return {

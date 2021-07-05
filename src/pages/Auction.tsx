@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     cardRoot: {
         padding: '2rem',
     },
+    card: {
+        maxWidth: 500,
+    },
     carouselItem: {
         backgroundColor: '#3F50B5',
         padding: '88px 140px',
@@ -80,7 +83,7 @@ const Auction = () => {
                 {data.map((d) => {
                     return (
                         <div key={d.attributes["TokenId"]} className={classes.cardRoot}>
-                            <Card>
+                            <Card className={classes.card}>
                                 <CardHeader
                                     avatar={
                                         <Avatar aria-label="recipe" className={classes.avatar}>

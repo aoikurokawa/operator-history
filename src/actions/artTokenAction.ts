@@ -19,6 +19,29 @@ export const ipfsUpload =
     });
   };
 
+export const getNFTFromMoralis = () => async (dispatch: any) => {
+  const web3 = new Web3(Web3.givenProvider || "http:localhost:8545");
+  const accounts = await web3.eth.getAccounts();
+
+  const NFT = Moralis.Object.extend("Nft");
+  const query = new Moralis.Query(NFT);
+  await query.find().then((data: any) => {
+    const nftArray: any[] = [];
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].attributes["Account"] === accounts[0]) {
+        if (data[i].attributes["IpfsUrl"] !== undefined) {
+          nftArray.push(data[i]);
+        }
+      }
+    }
+    console.log(nftArray);
+    dispatch({
+      type: "GET_MORALISNFTDATA",
+      nftArray: nftArray,
+    });
+  });
+};
+
 export const getArtTokenContract = () => async (dispatch: any) => {
   const web3 = new Web3(Web3.givenProvider || "http:localhost:8545");
   const accounts = await web3.eth.getAccounts();

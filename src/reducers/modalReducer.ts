@@ -1,4 +1,12 @@
-const initialState = {
+interface State{
+    isModalVisible: boolean, 
+    functionType: string, 
+    title: string, 
+    objectId: string, 
+    tokenId: string,
+}
+
+const initialState: State = {
     isModalVisible: false,
     functionType: "",
     title: "",

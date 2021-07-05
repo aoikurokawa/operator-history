@@ -55,7 +55,7 @@ interface RootState {
   modal: any;
 }
 
-const BidModal = () => {
+const Modals = () => {
   const [price, setPrice] = useState<number>(0);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const classes = useStyles();
@@ -201,4 +201,4 @@ const BidModal = () => {
   );
 };
 
-export default BidModal;
+export default Modals;

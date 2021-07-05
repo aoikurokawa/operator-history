@@ -1,18 +1,26 @@
-import React from 'react';
-import { Switch, Route, useLocation } from 'react-router-dom';
+import React from "react";
+import { Switch, Route, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import Nav from "./components/Nav";
-import Home from './pages/Home';
-import Auction from './pages/Auction';
-import AuctionDetail from './pages/AuctionDetail';
-import SpeedDials from './components/SpeedDial';
-import UploadPage from './pages/UploadPage';
-import MyPage from './pages/MyPage';
+import Home from "./pages/Home";
+import Auction from "./pages/Auction";
+import AuctionDetail from "./pages/AuctionDetail";
+import SpeedDials from "./components/SpeedDial";
+import UploadPage from "./pages/UploadPage";
+import MyPage from "./pages/MyPage";
+import Loader from "./components/Loader";
+import Modals from "./components/Modal";
 
-
+interface RootState {
+  modal: any, 
+  loader: any,
+}
 
 function App() {
   const location = useLocation();
+  const isModalVisible = useSelector((state: RootState) => state.modal.isModalVisible);
+  const isLoading = useSelector((state: RootState) => state.loader.isLoading);
 
   return (
     <div>
@@ -35,6 +43,8 @@ function App() {
         </Route>
       </Switch>
       <SpeedDials />
+      <Loader />
+      <Modals />
     </div>
   );
 }
