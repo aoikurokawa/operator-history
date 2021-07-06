@@ -135,90 +135,97 @@ const MyPage = () => {
               <Link href="#">See more</Link>
             </Typography>
             <div className={classes.cardContainer}>
-              {nftArray.map((d: any) => {
-                return (
-                  <div
-                    key={d.attributes["TokenId"]}
-                    className={classes.cardRoot}
-                  >
-                    <Card className={classes.card}>
-                      {d.attributes["IsSelled"] ? (
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            padding: "0 1rem",
-                          }}
-                        >
-                          <Typography component="span" variant="h4">
-                            Auction Now
-                          </Typography>
-                          <IconButton
-                            aria-label="settings"
-                            onClick={() => auctionDetailHandler(d)}
+              {nftArray.length === 0 ?
+                <div>No array</div>
+                :
+                <>
+                {nftArray.map((d: any) => {
+                  return (
+                    <div
+                      key={d.attributes["TokenId"]}
+                      className={classes.cardRoot}
+                    >
+                      <Card className={classes.card}>
+                        {d.attributes["IsSelled"] ? (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              padding: "0 1rem",
+                            }}
                           >
-                            <OpenInNewIcon />
-                          </IconButton>
-                        </div>
-                      ) : (
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              aria-label="recipe"
-                              className={classes.avatar}
-                            >
-                              {d.attributes["Account"]}
-                            </Avatar>
-                          }
-                          action={
+                            <Typography component="span" variant="h4">
+                              Auction Now
+                            </Typography>
                             <IconButton
                               aria-label="settings"
-                              onClick={() =>
-                                handleModal(d.id, d.attributes["TokenId"])
-                              }
+                              onClick={() => auctionDetailHandler(d)}
                             >
-                              <GavelIcon />
+                              <OpenInNewIcon />
                             </IconButton>
-                          }
-                          title={d.attributes["Name"]}
+                          </div>
+                        ) : (
+                          <CardHeader
+                            avatar={
+                              <Avatar
+                                aria-label="recipe"
+                                className={classes.avatar}
+                              >
+                                {d.attributes["Account"]}
+                              </Avatar>
+                            }
+                            action={
+                              <IconButton
+                                aria-label="settings"
+                                onClick={() =>
+                                  handleModal(d.id, d.attributes["TokenId"])
+                                }
+                              >
+                                <GavelIcon />
+                              </IconButton>
+                            }
+                            title={d.attributes["Name"]}
+                          />
+                        )}
+                        <CardMedia
+                          className={classes.media}
+                          image={d.attributes["IpfsUrl"]}
+                          title="Paella dish"
                         />
-                      )}
-                      <CardMedia
-                        className={classes.media}
-                        image={d.attributes["IpfsUrl"]}
-                        title="Paella dish"
-                      />
-                      <CardContent>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          IPFS Hash: <br />
-                          {d.attributes["IpfsHash"]}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          IPFS URL: <br />
-                          <Link href={d.attributes["IpfsUrl"]} target="_blank">
-                            {d.attributes["IpfsUrl"]}
-                          </Link>
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="textSecondary"
-                          component="p"
-                        >
-                          Token ID: {d.attributes["TokenId"]}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </div>
-                );
-              })}
+                        <CardContent>
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                          >
+                            IPFS Hash: <br />
+                            {d.attributes["IpfsHash"]}
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                          >
+                            IPFS URL: <br />
+                            <Link href={d.attributes["IpfsUrl"]} target="_blank">
+                              {d.attributes["IpfsUrl"]}
+                            </Link>
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            component="p"
+                          >
+                            Token ID: {d.attributes["TokenId"]}
+                          </Typography>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  );
+                })}
+                </>
+            }
+              
             </div>
           </div>
         </>

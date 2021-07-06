@@ -34,7 +34,7 @@ export const getNFTFromMoralis = () => async (dispatch: any) => {
         }
       }
     }
-    console.log(nftArray);
+    
     dispatch({
       type: "GET_MORALISNFTDATA",
       nftArray: nftArray,
