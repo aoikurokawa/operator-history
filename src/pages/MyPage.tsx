@@ -78,7 +78,6 @@ const MyPage = () => {
   const dispatch = useDispatch();
   const { accounts, nftArray } = useSelector((state: RootState) => state.artToken);
   const { isLoading } = useSelector((state: RootState) => state.loader);
-  // const { data, isFetching } = useMoralisQuery("Nft");
 
   useEffect(() => {
     
@@ -89,8 +88,6 @@ const MyPage = () => {
     dispatch(getNFTFromMoralis());
     
   }, []);
-
-  console.log(nftArray);
 
   const handleModal = (objectId: string, tokenId: string) => {
     dispatch({
@@ -114,14 +111,6 @@ const MyPage = () => {
     <div className={classes.root}>
       {nftArray && (
         <>
-          <Typography
-            align="left"
-            component="h1"
-            variant="h3"
-            style={{ padding: "0rem 2rem" }}
-          >
-            My Page
-          </Typography>
           <div className={classes.container}>
             <Typography component="h1" variant="h2" align="center">
               Your NFT
@@ -142,7 +131,7 @@ const MyPage = () => {
                 {nftArray.map((d: any) => {
                   return (
                     <div
-                      key={d.attributes["TokenId"]}
+                      key={d.id}
                       className={classes.cardRoot}
                     >
                       <Card className={classes.card}>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button, Container, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { useMoralisFile } from "react-moralis";
 
 import { ipfsUpload } from "../actions/artTokenAction";
 
@@ -10,6 +9,7 @@ const useStyles = makeStyles({
   inputContainer: {
     width: "100%",
     textAlign: "center",
+    padding: '1rem',
   },
   input: {
     display: "none",
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     borderWidth: "5px",
     borderStyle: "double",
     borderColor: "arkslategray",
-    height: "35rem",
+    height: "25rem",
   },
   img: {
     width: "100%",
@@ -41,7 +41,6 @@ const UploadArt = () => {
   const [imageUrl, setImageUrl] = useState<string | undefined>();
   const [name, setName] = useState("");
   const { accounts } = useSelector((state: RootState) => state.auction);
-  const { saveFile } = useMoralisFile();
 
   const createNftHandler = async () => {
     dispatch({
@@ -72,7 +71,7 @@ const UploadArt = () => {
         />
         <label htmlFor="contained-button-file">
           <Button variant="contained" color="primary" component="span">
-            Upload Your Work
+            {imageUrl === undefined ? <>Upload Your Work</> : <>Choose another</>}
           </Button>
         </label>
       </Container>

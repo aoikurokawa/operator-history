@@ -19,8 +19,6 @@ interface RootState {
 
 function App() {
   const location = useLocation();
-  const isModalVisible = useSelector((state: RootState) => state.modal.isModalVisible);
-  const isLoading = useSelector((state: RootState) => state.loader.isLoading);
 
   return (
     <div>
