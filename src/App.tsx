@@ -9,12 +9,13 @@ import AuctionDetail from "./pages/AuctionDetail";
 import SpeedDials from "./components/SpeedDial";
 import UploadPage from "./pages/UploadPage";
 import MyPage from "./pages/MyPage";
+import CrowdfundingPage from "./pages/CrowdfundingPage";
 import Loader from "./components/Loader";
 import Modals from "./components/Modal";
 
 interface RootState {
-  modal: any, 
-  loader: any,
+  modal: any;
+  loader: any;
 }
 
 function App() {
@@ -38,6 +39,9 @@ function App() {
         </Route>
         <Route path="/mypage" exact>
           <MyPage />
+        </Route>
+        <Route path="/crowdfunding" exact>
+          <CrowdfundingPage />
         </Route>
       </Switch>
       <SpeedDials />
