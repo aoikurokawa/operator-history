@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 
@@ -15,9 +16,9 @@ const useStyles = makeStyles({
     height: "20rem",
   },
   buttonContainer: {
-    display: "flex", 
+    display: "flex",
     justifyContent: "space-evenly",
-  }
+  },
 });
 
 const CrowdfundingPage = () => {
@@ -29,13 +30,15 @@ const CrowdfundingPage = () => {
         <Carousels />
       </Container>
       <Container className={classes.buttonContainer}>
+        <Link to="/create">
           <Button variant="contained" color="primary" disableElevation>
             Create Project
           </Button>
-          <Button variant="contained" color="primary" disableElevation>
-            Explore Project
-          </Button>
-        </Container>
+        </Link>
+        <Button variant="contained" color="primary" disableElevation>
+          Explore Project
+        </Button>
+      </Container>
     </>
   );
 };

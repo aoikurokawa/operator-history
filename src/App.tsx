@@ -12,6 +12,7 @@ import MyPage from "./pages/MyPage";
 import CrowdfundingPage from "./pages/CrowdfundingPage";
 import Loader from "./components/Loader";
 import Modals from "./components/Modal";
+import CreateCrowdfunding from "./pages/CreateCrowdfunding";
 
 interface RootState {
   modal: any;
@@ -42,6 +43,9 @@ function App() {
         </Route>
         <Route path="/crowdfunding" exact>
           <CrowdfundingPage />
+        </Route>
+        <Route path="/create" exact>
+          <CreateCrowdfunding />
         </Route>
       </Switch>
       <SpeedDials />
