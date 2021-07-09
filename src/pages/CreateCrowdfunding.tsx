@@ -12,7 +12,9 @@ import {
 
 import Target from "../components/Crowdfunding/Target";
 import Description from "../components/Crowdfunding/Description";
+import UploadImage from "../components/Crowdfunding/UploadImage";
 import Review from "../components/Crowdfunding/Review";
+import Content from "../components/Crowdfunding/Content";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -51,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const steps = ["Target", "Description", "Review"];
+const steps = ["Target", "Description", "Image", "Content","Review"];
 
 function getStepContent(step: any) {
   switch (step) {
@@ -60,6 +62,10 @@ function getStepContent(step: any) {
     case 1:
       return <Description />;
     case 2:
+      return <UploadImage />;
+    case 3: 
+      return <Content />
+    case 4:
       return <Review />;
     default:
       throw new Error("Unknown step");
