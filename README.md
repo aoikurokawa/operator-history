@@ -11,5 +11,5 @@ pnpm build
 Initialize a Vault
 
 ```bash
-pnpm run 
+node src/initialize-vault.js
 ```
