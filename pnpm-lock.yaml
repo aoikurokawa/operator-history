@@ -11,6 +11,9 @@ importers:
       '@jito-foundation/restaking-sdk':
         specifier: ^1.0.0
         version: 1.0.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.2)(ws@8.18.1)
+      '@jito-foundation/vault-sdk':
+        specifier: ^1.0.0
+        version: 1.0.0(fastestsmallesttextencoderdecoder@1.0.22)(ws@8.18.1)
       '@solana/kit':
         specifier: ^2.1.0
         version: 2.1.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.2)(ws@8.18.1)
@@ -187,6 +190,9 @@ packages:
 
   '@jito-foundation/restaking-sdk@1.0.0':
     resolution: {integrity: sha512-uskVWj2vK85lfUfF8d0MmeVB+MZvGtJOnScN2ZH48aLze4VlRtCPQcftG2YuptDJorr/SifCota4ePvkEAgFKw==}
+
+  '@jito-foundation/vault-sdk@1.0.0':
+    resolution: {integrity: sha512-WtE7OYlcGyNcUhukWAWksa1FVyVY3Tb6E4jdgsa+KoaF0rFXH8agskHMLGQyAOScGlcgR4BrruP60DyrX5Cjqg==}
 
   '@jridgewell/gen-mapping@0.3.8':
     resolution: {integrity: sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==}
@@ -1059,6 +1065,23 @@ snapshots:
       - supports-color
       - tsx
       - typescript
+      - ws
+      - yaml
+
+  '@jito-foundation/vault-sdk@1.0.0(fastestsmallesttextencoderdecoder@1.0.22)(ws@8.18.1)':
+    dependencies:
+      '@solana/kit': 2.1.0(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.2)(ws@8.18.1)
+      '@types/node': 22.13.14
+      tsup: 8.4.0(typescript@5.8.2)
+      typescript: 5.8.2
+    transitivePeerDependencies:
+      - '@microsoft/api-extractor'
+      - '@swc/core'
+      - fastestsmallesttextencoderdecoder
+      - jiti
+      - postcss
+      - supports-color
+      - tsx
       - ws
       - yaml
 

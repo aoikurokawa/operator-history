@@ -15,6 +15,7 @@
   "packageManager": "pnpm@10.7.0",
   "dependencies": {
     "@jito-foundation/restaking-sdk": "^1.0.0",
+    "@jito-foundation/vault-sdk": "^1.0.0",
     "@solana/kit": "^2.1.0",
     "gill": "^0.8.2"
   },
