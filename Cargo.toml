@@ -1,0 +1,7 @@
+[workspace]
+members = [
+	"operator-history-core",
+	"operator-history-program",
+	"operator-history-sdk"
+]
+resolver = "2"
