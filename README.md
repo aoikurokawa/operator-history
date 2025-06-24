@@ -2,4 +2,8 @@
 
 ## Operator History
 
+### Accounts
+
+- Config
+
 ## Operator Streward
