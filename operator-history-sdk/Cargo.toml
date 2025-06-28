@@ -1,6 +1,11 @@
 [package]
 name = "operator-history-sdk"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
+borsh = { workspace = true }
+shank = { workspace = true }
+solana-decode-error = { workspace = true }
+solana-program-error = { workspace = true }
+thiserror = { workspace = true }
