@@ -15,7 +15,7 @@ use solana_sysvar::Sysvar;
 /// Initializes the global configuration for the operator history program
 /// [`crate::RestakingInstruction::InitializeConfig`]
 pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
-    let [config, admin, vault_program, system_program] = accounts else {
+    let [config, admin, jito_vault_program, system_program] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
@@ -47,7 +47,7 @@ pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) 
     let mut config_data = config.try_borrow_mut_data()?;
     config_data[0] = Config::DISCRIMINATOR;
     let config = Config::try_from_slice_unchecked_mut(&mut config_data)?;
-    *config = Config::new(*admin.key, *vault_program.key, config_bump);
+    *config = Config::new(*jito_vault_program.key, *admin.key, config_bump);
 
     Ok(())
 }

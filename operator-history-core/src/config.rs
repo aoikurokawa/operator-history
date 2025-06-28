@@ -28,7 +28,7 @@ pub struct Config {
 
 impl Config {
     /// Construct new config
-    pub fn new(jito_vault_program_id: Pubkey, admin: Pubkey, bump: u8) -> Self {
+    pub const fn new(jito_vault_program_id: Pubkey, admin: Pubkey, bump: u8) -> Self {
         Self {
             jito_vault_program_id,
             admin,
