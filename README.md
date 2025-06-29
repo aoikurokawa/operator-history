@@ -1,9 +1,16 @@
 # Jito Restaking Operator Ledger
 
-## Operator History
+## About
 
-### Accounts
+## Program
+
+### Operator History Program
+
+#### Accounts
 
 - Config
 
-## Operator Streward
+### Operator Streward Program
+
+## References
+- [stakenet](https://github.com/jito-foundation/stakenet)
