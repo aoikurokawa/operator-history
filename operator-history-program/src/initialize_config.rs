@@ -40,7 +40,7 @@ pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) 
         &Rent::get()?,
         8_u64
             .checked_add(size_of::<Config>() as u64)
-            .ok_or(OperatorHistoryError::ArithmeticError)?,
+            .ok_or(OperatorHistoryError::Arithmetic)?,
         &config_seeds,
     )?;
 

@@ -113,13 +113,14 @@ impl CircBuf {
         }
     }
 
+    /// Fetch mutable array of [`OperatorHistoryEntry`]
     pub fn arr_mut(&mut self) -> &mut [OperatorHistotyEntry] {
         &mut self.arr
     }
 
     /// Given a new entry and epoch, inserts the entry into the buffer in sorted order
     /// Will not insert if the epoch is out of range or already exists in the buffer
-    fn insert(
+    pub fn insert(
         &mut self,
         entry: OperatorHistotyEntry,
         epoch: u16,
