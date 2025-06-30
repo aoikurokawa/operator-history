@@ -832,6 +832,7 @@ dependencies = [
  "bytemuck",
  "jito-account-traits-derive",
  "jito-bytemuck",
+ "operator-history-sdk",
  "shank",
  "shank_idl",
  "solana-account-info",
