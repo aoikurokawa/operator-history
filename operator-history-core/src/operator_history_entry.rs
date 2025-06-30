@@ -1,0 +1,90 @@
+use std::net::{IpAddr, Ipv4Addr};
+
+use bytemuck::{Pod, Zeroable};
+use jito_bytemuck::types::{PodU16, PodU32, PodU64};
+use shank::ShankType;
+
+use crate::client_version::ClientVersion;
+
+/// Operator History Entry
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Pod, Zeroable, ShankType)]
+#[repr(C)]
+pub struct OperatorHistotyEntry {
+    /// Activated stake lamports
+    activated_stake_lamports: PodU64,
+
+    /// Rank
+    rank: PodU32,
+
+    /// Epoch
+    epoch: PodU16,
+
+    /// Version
+    version: ClientVersion,
+
+    /// IP address
+    ip: [u8; 4],
+
+    /// Reserved space
+    reserved_space: [u8; 328],
+}
+
+impl Default for OperatorHistotyEntry {
+    fn default() -> Self {
+        Self {
+            activated_stake_lamports: PodU64::default(),
+            rank: PodU32::default(),
+            epoch: PodU16::default(),
+            version: ClientVersion::default(),
+            ip: [0; 4],
+            reserved_space: [0; 328],
+        }
+    }
+}
+
+impl OperatorHistotyEntry {
+    /// Construct a new [`OperatorHistoryEntry`]
+    pub fn new(
+        activated_stake_lamports: u64,
+        rank: u32,
+        epoch: u16,
+        version: ClientVersion,
+        ip: [u8; 4],
+    ) -> Self {
+        Self {
+            activated_stake_lamports: PodU64::from(activated_stake_lamports),
+            rank: PodU32::from(rank),
+            epoch: PodU16::from(epoch),
+            version,
+            ip,
+            reserved_space: [0; 328],
+        }
+    }
+
+    /// Activated stake lamports
+    pub fn activated_stake_lamports(&self) -> u64 {
+        self.activated_stake_lamports.into()
+    }
+
+    /// Rank
+    pub fn rank(&self) -> u32 {
+        self.rank.into()
+    }
+
+    /// Epoch
+    pub fn epoch(&self) -> u16 {
+        self.epoch.into()
+    }
+
+    /// Version
+    pub fn version(&self) -> ClientVersion {
+        self.version
+    }
+
+    /// IP address
+    pub fn address(&self) -> IpAddr {
+        IpAddr::V4(Ipv4Addr::new(
+            self.ip[0], self.ip[1], self.ip[2], self.ip[3],
+        ))
+    }
+}

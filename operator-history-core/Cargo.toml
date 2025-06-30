@@ -7,6 +7,7 @@ edition = "2021"
 bytemuck = { workspace = true }
 jito-account-traits-derive = { workspace = true }
 jito-bytemuck = { workspace = true }
+operator-history-sdk = { workspace = true }
 shank = { workspace = true }
 shank_idl = { workspace = true }
 solana-account-info = { workspace = true }

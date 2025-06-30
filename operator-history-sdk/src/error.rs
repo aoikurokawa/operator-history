@@ -4,8 +4,14 @@ use thiserror::Error;
 
 #[derive(Debug, Error, PartialEq, Eq)]
 pub enum OperatorHistoryError {
+    #[error("Epoch is out of range of history")]
+    EpochOutOfRange,
+
+    #[error("Inserting duplicate epoch")]
+    DuplicateEpoch,
+
     #[error("ArithmeticError")]
-    ArithmeticError,
+    Arithmetic = 3000,
 }
 
 impl<T> DecodeError<T> for OperatorHistoryError {
