@@ -5,49 +5,75 @@ use shank::ShankType;
 
 use crate::{operator_history_entry::OperatorHistotyEntry, OPERATOR_HISTORY_ENTRY_MAX_ITEMS};
 
-pub fn find_insert_position(arr: &[OperatorHistotyEntry], idx: usize, epoch: u16) -> Option<usize> {
+pub fn find_insert_position(
+    arr: &[OperatorHistotyEntry],
+    idx: usize,
+    epoch: u16,
+) -> Result<Option<usize>, OperatorHistoryError> {
     let len = arr.len();
     if len == 0 {
-        return None;
+        return Ok(None);
     }
 
-    let insert_pos =
-        if idx != len - 1 && arr[idx + 1].epoch() == OperatorHistotyEntry::default().epoch() {
-            // If the circ buf still has default values in it, we do a normal binary search without factoring for wraparound.
-            let len = idx + 1;
-            let mut left = 0;
-            let mut right = len;
-            while left < right {
-                let mid = (left + right) / 2;
-                match arr[mid].epoch().cmp(&epoch) {
-                    std::cmp::Ordering::Equal => return None,
-                    std::cmp::Ordering::Less => left = mid + 1,
-                    std::cmp::Ordering::Greater => right = mid,
+    let insert_pos = if idx != len.checked_sub(1).ok_or(OperatorHistoryError::Arithmetic)?
+        && arr[idx.checked_add(1).ok_or(OperatorHistoryError::Arithmetic)?].epoch()
+            == OperatorHistotyEntry::default().epoch()
+    {
+        // If the circ buf still has default values in it, we do a normal binary search without factoring for wraparound.
+        let len = idx.checked_add(1).ok_or(OperatorHistoryError::Arithmetic)?;
+        let mut left = 0;
+        let mut right = len;
+        while left < right {
+            let mid = left
+                .checked_add(right)
+                .and_then(|x| x.checked_div(2))
+                .ok_or(OperatorHistoryError::Arithmetic)?;
+            match arr[mid].epoch().cmp(&epoch) {
+                std::cmp::Ordering::Equal => return Ok(None),
+                std::cmp::Ordering::Less => {
+                    left = mid.checked_add(1).ok_or(OperatorHistoryError::Arithmetic)?
                 }
+                std::cmp::Ordering::Greater => right = mid,
             }
-            left % arr.len()
-        } else {
-            // Binary search with wraparound
-            let mut left = 0;
-            let mut right = len;
-            while left < right {
-                let mid = (left + right) / 2;
-                // idx + 1 is the index of the smallest epoch in the array
-                let mid_idx = ((idx + 1) + mid) % len;
-                match arr[mid_idx].epoch().cmp(&epoch) {
-                    std::cmp::Ordering::Equal => return None,
-                    std::cmp::Ordering::Less => left = mid + 1,
-                    std::cmp::Ordering::Greater => right = mid,
+        }
+        left.checked_rem(arr.len())
+            .ok_or(OperatorHistoryError::Arithmetic)?
+    } else {
+        // Binary search with wraparound
+        let mut left = 0;
+        let mut right = len;
+        while left < right {
+            let mid = left
+                .checked_add(right)
+                .and_then(|x| x.checked_div(2))
+                .ok_or(OperatorHistoryError::Arithmetic)?;
+            // idx + 1 is the index of the smallest epoch in the array
+
+            let mid_idx = idx
+                .checked_add(1)
+                .and_then(|x| x.checked_add(mid))
+                .and_then(|y| y.checked_rem(len))
+                .ok_or(OperatorHistoryError::Arithmetic)?;
+            match arr[mid_idx].epoch().cmp(&epoch) {
+                std::cmp::Ordering::Equal => return Ok(None),
+                std::cmp::Ordering::Less => {
+                    left = mid.checked_add(1).ok_or(OperatorHistoryError::Arithmetic)?
                 }
+                std::cmp::Ordering::Greater => right = mid,
             }
-            ((idx + 1) + left) % len
-        };
+        }
+
+        idx.checked_add(1)
+            .and_then(|x| x.checked_add(left))
+            .and_then(|y| y.checked_rem(len))
+            .ok_or(OperatorHistoryError::Arithmetic)?
+    };
 
     if arr[insert_pos].epoch() == epoch {
-        return None;
+        return Ok(None);
     }
 
-    Some(insert_pos)
+    Ok(Some(insert_pos))
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Pod, Zeroable, ShankType)]
@@ -64,6 +90,12 @@ pub struct CircBuf {
 
     /// Reserved space
     reserved_space: [u8; 328],
+}
+
+impl Default for CircBuf {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl CircBuf {
@@ -87,12 +119,18 @@ impl CircBuf {
     }
 
     /// Push an [`OperatorHistoryEntry`] item
-    pub fn push(&mut self, item: OperatorHistotyEntry) {
-        let index = (self.index() + 1) % self.arr.len() as u64;
+    pub fn push(&mut self, item: OperatorHistotyEntry) -> Result<(), OperatorHistoryError> {
+        let index = self
+            .index()
+            .checked_add(1)
+            .and_then(|x| x.checked_rem(self.arr.len() as u64))
+            .ok_or(OperatorHistoryError::Arithmetic)?;
 
         self.index = PodU64::from(index);
         self.arr[self.index() as usize] = item;
         self.is_empty = PodBool::from_bool(false);
+
+        Ok(())
     }
 
     /// Fetch last [`OperatorHistoryEntry`] element
@@ -114,7 +152,7 @@ impl CircBuf {
     }
 
     /// Fetch mutable array of [`OperatorHistoryEntry`]
-    pub fn arr_mut(&mut self) -> &mut [OperatorHistotyEntry] {
+    pub const fn arr_mut(&mut self) -> &mut [OperatorHistotyEntry] {
         &mut self.arr
     }
 
@@ -131,7 +169,10 @@ impl CircBuf {
 
         // Find the lowest epoch in the buffer to ensure the new epoch is valid
         let min_epoch = {
-            let next_i = (self.index() as usize + 1) % self.arr.len();
+            let next_i = (self.index() as usize)
+                .checked_add(1)
+                .and_then(|x| x.checked_rem(self.arr.len()))
+                .ok_or(OperatorHistoryError::Arithmetic)?;
             if self.arr[next_i].epoch() == OperatorHistotyEntry::default().epoch() {
                 self.arr[0].epoch()
             } else {
@@ -144,26 +185,40 @@ impl CircBuf {
             return Err(OperatorHistoryError::EpochOutOfRange);
         }
 
-        let insert_pos = find_insert_position(&self.arr, self.index() as usize, epoch)
+        let insert_pos = find_insert_position(&self.arr, self.index() as usize, epoch)?
             .ok_or(OperatorHistoryError::DuplicateEpoch)?;
 
         // If idx < insert_pos, the shifting needs to wrap around
         let end_index = if self.index() < insert_pos as u64 {
-            self.index() as usize + self.arr.len()
+            (self.index() as usize)
+                .checked_add(self.arr.len())
+                .ok_or(OperatorHistoryError::Arithmetic)?
         } else {
             self.index() as usize
         };
 
         // Shift all elements to the right to make space for the new entry, starting with current idx
         for i in (insert_pos..=end_index).rev() {
-            let i = i % self.arr.len();
-            let next_i = (i + 1) % self.arr.len();
+            let i = i
+                .checked_rem(self.arr.len())
+                .ok_or(OperatorHistoryError::Arithmetic)?;
+            let next_i = i
+                .checked_add(1)
+                .and_then(|x| x.checked_rem(self.arr.len()))
+                .ok_or(OperatorHistoryError::Arithmetic)?;
+
             self.arr[next_i] = self.arr[i];
         }
 
         self.arr[insert_pos] = entry;
 
-        self.index = PodU64::from((self.index() + 1) % self.arr.len() as u64);
+        let index = self
+            .index()
+            .checked_add(1)
+            .and_then(|x| x.checked_rem(self.arr.len() as u64))
+            .ok_or(OperatorHistoryError::Arithmetic)?;
+
+        self.index = PodU64::from(index);
 
         Ok(())
     }

@@ -83,12 +83,12 @@ impl OperatorHistotyEntry {
     }
 
     /// Version
-    pub fn version(&self) -> ClientVersion {
+    pub const fn version(&self) -> ClientVersion {
         self.version
     }
 
     /// IP address
-    pub fn address(&self) -> IpAddr {
+    pub const fn address(&self) -> IpAddr {
         IpAddr::V4(Ipv4Addr::new(
             self.ip[0], self.ip[1], self.ip[2], self.ip[3],
         ))
