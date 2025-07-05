@@ -223,3 +223,138 @@ impl CircBuf {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::net::Ipv4Addr;
+
+    use crate::{
+        client_version::ClientVersion, operator_history_entry::OperatorHistotyEntry,
+        OPERATOR_HISTORY_ENTRY_MAX_ITEMS,
+    };
+
+    use super::CircBuf;
+
+    #[test]
+    fn test_new_circbuf() {
+        let buf = CircBuf::new();
+        assert_eq!(buf.index(), 0);
+        assert!(!buf.is_empty());
+    }
+
+    #[test]
+    fn test_push_single_item() {
+        let mut buf = CircBuf::new();
+        let entry =
+            OperatorHistotyEntry::new(1, 1, 1, 1, ClientVersion::new(0, 0, 1), [1, 1, 1, 1]);
+
+        let result = buf.push(entry);
+        assert!(result.is_ok());
+        assert_eq!(buf.index(), 1);
+        assert!(!buf.is_empty());
+
+        let last = buf.last().unwrap();
+        assert_eq!(last.epoch(), 1);
+    }
+
+    #[test]
+    fn test_push_multiple_items() {
+        let mut buf = CircBuf::new();
+
+        for i in 0..5 {
+            let entry = OperatorHistotyEntry::new(
+                i as u64,
+                i as u32,
+                i as u16,
+                i as u16,
+                ClientVersion::new(i, i, i),
+                [i, i, i, i],
+            );
+            buf.push(entry).unwrap();
+        }
+
+        assert_eq!(buf.index(), 5);
+
+        let last = buf.last().unwrap();
+        assert_eq!(last.activated_stake_lamports(), 4);
+        assert_eq!(last.rank(), 4);
+        assert_eq!(last.operator_fee_bps(), 4);
+        assert_eq!(last.version(), ClientVersion::new(4, 4, 4));
+        assert_eq!(last.ip_address(), Ipv4Addr::new(4, 4, 4, 4));
+    }
+
+    #[test]
+    fn test_push_wraparound() {
+        let mut buf = CircBuf::new();
+        let max_items = OPERATOR_HISTORY_ENTRY_MAX_ITEMS;
+
+        for i in 0..max_items {
+            let entry = OperatorHistotyEntry::new(
+                i as u64,
+                i as u32,
+                i as u16,
+                i as u16,
+                ClientVersion::new(i as u8, i as u8, i as u8),
+                [i as u8, i as u8, i as u8, i as u8],
+            );
+            buf.push(entry).unwrap();
+        }
+
+        let entry = OperatorHistotyEntry::new(
+            1000,
+            1000,
+            1000,
+            1000,
+            ClientVersion::new(255, 255, 255),
+            [255, 255, 255, 255],
+        );
+        buf.push(entry).unwrap();
+
+        assert_eq!(buf.index(), 1);
+
+        let last = buf.last().unwrap();
+        assert_eq!(last.activated_stake_lamports(), 1000);
+        assert_eq!(last.rank(), 1000);
+        assert_eq!(last.operator_fee_bps(), 1000);
+        assert_eq!(last.version(), ClientVersion::new(255, 255, 255));
+        assert_eq!(last.ip_address(), Ipv4Addr::new(255, 255, 255, 255));
+    }
+
+    #[test]
+    fn test_insert_valid_epoch() {
+        let mut buf = CircBuf::new();
+
+        for i in 0..5 {
+            if i == 3 {
+                continue;
+            }
+
+            let entry = OperatorHistotyEntry::new(
+                i as u64,
+                i as u32,
+                i as u16,
+                i as u16,
+                ClientVersion::new(i, i, i),
+                [i, i, i, i],
+            );
+            buf.push(entry).unwrap();
+        }
+
+        let initial_index = buf.index();
+
+        let entry = OperatorHistotyEntry::new(
+            100,
+            100,
+            100,
+            3,
+            ClientVersion::new(100, 100, 100),
+            [100, 100, 100, 100],
+        );
+        buf.insert(entry, 3).unwrap();
+
+        assert_eq!(
+            buf.index(),
+            (initial_index + 1) % (OPERATOR_HISTORY_ENTRY_MAX_ITEMS as u64)
+        )
+    }
+}

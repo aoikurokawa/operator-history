@@ -77,6 +77,11 @@ impl OperatorHistotyEntry {
         self.rank.into()
     }
 
+    /// Rank
+    pub fn operator_fee_bps(&self) -> u16 {
+        self.operator_fee_bps.into()
+    }
+
     /// Epoch
     pub fn epoch(&self) -> u16 {
         self.epoch.into()
@@ -88,7 +93,7 @@ impl OperatorHistotyEntry {
     }
 
     /// IP address
-    pub const fn address(&self) -> IpAddr {
+    pub const fn ip_address(&self) -> IpAddr {
         IpAddr::V4(Ipv4Addr::new(
             self.ip[0], self.ip[1], self.ip[2], self.ip[3],
         ))
