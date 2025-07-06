@@ -26,3 +26,10 @@ solana-pubkey = "2.2.1"
 solana-rent = "2.2.1"
 solana-sysvar = "2.2.1"
 thiserror = "1.0.57"
+
+[workspace.lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(target_os, values("solana"))',
+    'cfg(feature, values("frozen-abi", "no-entrypoint"))',
+]
