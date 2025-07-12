@@ -1,3 +1,5 @@
+CARGO_NEXTEST := cargo nextest
+
 # Clippy
 .PHONY: clippy
 clippy:
@@ -6,4 +8,6 @@ clippy:
 # Test
 .PHONY: test
 test: 
-	cargo test
+	cargo-build-sbf
+	SBF_OUT_DIR=$(pwd)/target/sbf-solana-solana/release
+	$(CARGO_NEXTEST) run --all-features

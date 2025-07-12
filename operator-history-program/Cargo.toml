@@ -37,5 +37,12 @@ solana-pubkey = { workspace = true }
 solana-rent = { workspace = true }
 solana-sysvar = { workspace = true }
 
+[dev-dependencies]
+mollusk-svm = { workspace = true }
+solana-account = { workspace = true }
+solana-instruction = { workspace = true }
+solana-pubkey = { workspace = true }
+solana-system-interface = { workspace = true }
+
 [lints]
 workspace = true
