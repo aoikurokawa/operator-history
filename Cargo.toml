@@ -1,7 +1,6 @@
 [workspace]
 members = [
 	"core",
-	"integration-tests",
 	"program",
 	"sdk"
 ]
@@ -14,7 +13,6 @@ jito-account-traits-derive = { package = "jito-account-traits-derive", git = "ht
 jito-bytemuck = { package = "jito-bytemuck", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
 jito-jsm-core = { package = "jito-jsm-core", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
 jito-vault-program = { package = "jito-vault-program", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
-mollusk-svm = "0.4.0"
 operator-history-core = { path = "core", version = "0.1.0" }
 operator-history-sdk = { path = "sdk", version = "0.1.0" }
 shank = "0.4.2"

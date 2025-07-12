@@ -37,11 +37,13 @@ impl Config {
         }
     }
 
-    pub fn jito_vault_program_id(&self) -> Pubkey {
+    /// Jito Vault Program ID
+    pub const fn jito_vault_program_id(&self) -> Pubkey {
         self.jito_vault_program_id
     }
 
-    pub fn admin(&self) -> Pubkey {
+    /// Admin pubkey
+    pub const fn admin(&self) -> Pubkey {
         self.admin
     }
 
