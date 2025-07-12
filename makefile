@@ -8,4 +8,6 @@ clippy:
 # Test
 .PHONY: test
 test: 
+	cargo-build-sbf
+	SBF_OUT_DIR=$(pwd)/target/sbf-solana-solana/release
 	$(CARGO_NEXTEST) run --all-features

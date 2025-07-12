@@ -3,7 +3,7 @@ use solana_account::Account;
 use solana_pubkey::Pubkey;
 
 #[test]
-fn test_initialize_operator_config() {
+fn initialize_config() {
     let sender = Pubkey::new_unique();
     let recipient = Pubkey::new_unique();
 
