@@ -1,4 +1,4 @@
-# Jito Restaking Operator Ledger
+# Jito Restaking Operator History
 
 ## About
 
