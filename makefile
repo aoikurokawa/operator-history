@@ -1,3 +1,5 @@
+CARGO_NEXTEST := cargo nextest
+
 # Clippy
 .PHONY: clippy
 clippy:
@@ -6,4 +8,4 @@ clippy:
 # Test
 .PHONY: test
 test: 
-	cargo test
+	$(CARGO_NEXTEST) run --all-features
