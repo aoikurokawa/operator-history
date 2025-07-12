@@ -1,37 +1,27 @@
-use mollusk_svm::{result::Check, Mollusk};
-use solana_account::Account;
-use solana_pubkey::Pubkey;
+use helpers::TestBuilder;
+use operator_history_core::config::Config;
+use solana_signer::Signer;
 
-#[test]
-fn initialize_config() {
-    let sender = Pubkey::new_unique();
-    let recipient = Pubkey::new_unique();
+mod helpers;
 
-    let base_lamports = 100_000_000u64;
-    let transfer_amount = 42_000u64;
+#[tokio::test]
+async fn initialize_config() {
+    let fixture = TestBuilder::new().await;
 
-    let instruction =
-        solana_system_interface::instruction::transfer(&sender, &recipient, transfer_amount);
-    let accounts = [
-        (
-            sender,
-            Account::new(base_lamports, 0, &solana_system_interface::program::id()),
-        ),
-        (
-            recipient,
-            Account::new(base_lamports, 0, &solana_system_interface::program::id()),
-        ),
-    ];
-    let checks = vec![
-        Check::success(),
-        // Check::compute_units(system_processor::DEFAULT_COMPUTE_UNITS),
-        Check::account(&sender)
-            .lamports(base_lamports - transfer_amount)
-            .build(),
-        Check::account(&recipient)
-            .lamports(base_lamports + transfer_amount)
-            .build(),
-    ];
+    let mut operator_history_program_client = fixture.operator_history_program_client();
 
-    Mollusk::default().process_and_validate_instruction(&instruction, &accounts, &checks);
+    let config = Config::find_program_address(&operator_history_program::id()).0;
+
+    let config_admin = operator_history_program_client
+        .do_initialize_config()
+        .await
+        .unwrap();
+
+    let config = operator_history_program_client
+        .get_config(&config)
+        .await
+        .unwrap();
+
+    assert_eq!(config.admin(), config_admin.pubkey());
+    assert_eq!(config.jito_vault_program_id(), jito_vault_program::id());
 }

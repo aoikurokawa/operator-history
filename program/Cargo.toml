@@ -19,6 +19,7 @@ mainnet-beta = []
 testnet = []
 devnet = []
 localhost = []
+test-sbf = []
 
 [dependencies]
 borsh = { workspace = true }
@@ -38,11 +39,21 @@ solana-rent = { workspace = true }
 solana-sysvar = { workspace = true }
 
 [dev-dependencies]
-mollusk-svm = { workspace = true }
+jito-vault-program = { workspace = true }
 solana-account = { workspace = true }
+solana-commitment-config = { workspace = true }
 solana-instruction = { workspace = true }
+solana-keypair = { workspace = true }
+solana-native-token = { workspace = true }
+solana-program-test = { workspace = true }
 solana-pubkey = { workspace = true }
+solana-signature = { workspace = true }
+solana-signer = { workspace = true }
 solana-system-interface = { workspace = true }
+solana-transaction = { workspace = true }
+test-case = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
 
 [lints]
 workspace = true
