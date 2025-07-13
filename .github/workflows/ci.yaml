@@ -199,7 +199,7 @@ jobs:
           tool: nextest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: make test
+      - run: cargo nextest run --all-features
         env:
           SBF_OUT_DIR: ${{ github.workspace }}/target/sbf-solana-solana/release
 
