@@ -8,12 +8,12 @@ pub fn initialize_config(
     program_id: &Pubkey,
     config: &Pubkey,
     admin: &Pubkey,
-    vault_program: &Pubkey,
+    jito_restaking_program: &Pubkey,
 ) -> Instruction {
     let accounts = vec![
         AccountMeta::new(*config, false),
         AccountMeta::new(*admin, true),
-        AccountMeta::new_readonly(*vault_program, false),
+        AccountMeta::new_readonly(*jito_restaking_program, false),
         AccountMeta::new_readonly(solana_system_interface::program::id(), false),
     ];
     Instruction {

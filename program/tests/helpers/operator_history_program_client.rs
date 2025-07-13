@@ -84,7 +84,7 @@ impl OperatorHistoryProgramClient {
                 &operator_history_program::id(),
                 config,
                 &config_admin.pubkey(),
-                &jito_vault_program::id(),
+                &jito_restaking_program::id(),
             )],
             Some(&config_admin.pubkey()),
             &[config_admin],

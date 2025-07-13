@@ -555,7 +555,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "115e54d64eb62cdebad391c19efc9dce4981c690c85a33a12199d99bb9546fee"
 dependencies = [
  "borsh-derive 0.10.4",
- "hashbrown 0.12.3",
+ "hashbrown 0.13.2",
 ]
 
 [[package]]
@@ -2163,6 +2163,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "jito-restaking-program"
+version = "0.0.5"
+source = "git+https://github.com/jito-foundation/restaking?rev=175b594f24c8913448942685c7345f7521dd0a41#175b594f24c8913448942685c7345f7521dd0a41"
+dependencies = [
+ "borsh 0.10.4",
+ "cfg-if",
+ "jito-bytemuck",
+ "jito-jsm-core",
+ "jito-restaking-core",
+ "jito-restaking-sdk",
+ "jito-vault-core",
+ "shank",
+ "solana-program",
+ "solana-security-txt",
+ "spl-associated-token-account",
+ "spl-token",
+ "spl-token-2022 7.0.0",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "jito-restaking-sdk"
 version = "0.0.5"
 source = "git+https://github.com/jito-foundation/restaking?rev=175b594f24c8913448942685c7345f7521dd0a41#175b594f24c8913448942685c7345f7521dd0a41"
@@ -2185,27 +2206,6 @@ dependencies = [
  "jito-vault-sdk",
  "shank",
  "solana-program",
- "spl-associated-token-account",
- "spl-token",
- "spl-token-2022 7.0.0",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "jito-vault-program"
-version = "0.0.5"
-source = "git+https://github.com/jito-foundation/restaking?rev=175b594f24c8913448942685c7345f7521dd0a41#175b594f24c8913448942685c7345f7521dd0a41"
-dependencies = [
- "borsh 0.10.4",
- "cfg-if",
- "jito-bytemuck",
- "jito-jsm-core",
- "jito-restaking-core",
- "jito-vault-core",
- "jito-vault-sdk",
- "shank",
- "solana-program",
- "solana-security-txt",
  "spl-associated-token-account",
  "spl-token",
  "spl-token-2022 7.0.0",
@@ -2874,7 +2874,8 @@ dependencies = [
  "jito-account-traits-derive",
  "jito-bytemuck",
  "jito-jsm-core",
- "jito-vault-program",
+ "jito-restaking-core",
+ "jito-restaking-program",
  "operator-history-core",
  "operator-history-sdk",
  "solana-account",

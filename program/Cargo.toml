@@ -27,6 +27,7 @@ bytemuck = { workspace = true }
 jito-account-traits-derive = { workspace = true }
 jito-bytemuck = { workspace = true }
 jito-jsm-core = { workspace = true }
+jito-restaking-core = { workspace = true }
 operator-history-core = { workspace = true }
 operator-history-sdk = { workspace = true }
 solana-account-info = { workspace = true }
@@ -39,7 +40,7 @@ solana-rent = { workspace = true }
 solana-sysvar = { workspace = true }
 
 [dev-dependencies]
-jito-vault-program = { workspace = true }
+jito-restaking-program = { workspace = true }
 solana-account = { workspace = true }
 solana-commitment-config = { workspace = true }
 solana-instruction = { workspace = true }

@@ -23,5 +23,8 @@ async fn initialize_config() {
         .unwrap();
 
     assert_eq!(config.admin(), config_admin.pubkey());
-    assert_eq!(config.jito_vault_program_id(), jito_vault_program::id());
+    assert_eq!(
+        config.jito_restaking_program_id(),
+        jito_restaking_program::id()
+    );
 }
