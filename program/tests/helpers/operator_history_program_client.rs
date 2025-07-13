@@ -64,8 +64,10 @@ impl OperatorHistoryProgramClient {
     where
         T: jito_bytemuck::AccountDeserialize,
     {
-        let account = self.banks_client.get_account(*account).await?.unwrap();
-        Ok(*T::try_from_slice_unchecked(account.data.as_slice())?)
+        let raw_account = self.banks_client.get_account(*account).await?.unwrap();
+        let account = *T::try_from_slice_unchecked(raw_account.data.as_slice())?;
+
+        Ok(account)
     }
 
     /// Execute initialize_config instruction

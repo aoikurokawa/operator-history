@@ -1,4 +1,4 @@
-use jito_bytemuck::AccountDeserialize;
+use jito_bytemuck::{AccountDeserialize, Discriminator};
 use jito_jsm_core::loader::{load_signer, load_system_program};
 use jito_restaking_core::operator::Operator;
 use operator_history_core::{config::Config, get_new_size, operator_history::OperatorHistory};
@@ -25,8 +25,8 @@ pub fn process_realloc_operator_history_account(
     let config = Config::try_from_slice_unchecked(&config_data)?;
 
     Operator::load(&config.jito_restaking_program_id(), operator_info, false)?;
-    // let operator_data = operator_info.data.borrow();
-    // let operator = Operator::try_from_slice_unchecked(&operator_data)?;
+    let operator_data = operator_info.data.borrow();
+    let operator = Operator::try_from_slice_unchecked(&operator_data)?;
 
     load_signer(payer, true)?;
     load_system_program(system_program)?;
@@ -69,17 +69,17 @@ pub fn process_realloc_operator_history_account(
         operator_history_info.resize(new_size)?;
     }
 
-    // let should_initialize = operator_history_info.data_len() > OperatorHistory::SIZE
-    //     && operator_history_info.try_borrow_data()?[0] != OperatorHistory::DISCRIMINATOR;
+    let should_initialize = operator_history_info.data_len() >= OperatorHistory::SIZE
+        && operator_history_info.try_borrow_data()?[0] != OperatorHistory::DISCRIMINATOR;
 
-    // if should_initialize {
-    //     let mut operator_history_data = operator_history_info.try_borrow_mut_data()?;
-    //     operator_history_data[0] = OperatorHistory::DISCRIMINATOR;
-    //     let operator_history =
-    //         OperatorHistory::try_from_slice_unchecked_mut(&mut operator_history_data)?;
-    //     *operator_history =
-    //         OperatorHistory::new(*operator_info.key, operator.index(), operator_history_bump);
-    // }
+    if should_initialize {
+        let mut operator_history_data = operator_history_info.try_borrow_mut_data()?;
+        operator_history_data[0] = OperatorHistory::DISCRIMINATOR;
+        let operator_history =
+            OperatorHistory::try_from_slice_unchecked_mut(&mut operator_history_data)?;
+
+        operator_history.initialize(operator_info.key, operator.index(), operator_history_bump);
+    }
 
     Ok(())
 }
