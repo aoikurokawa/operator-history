@@ -14,13 +14,18 @@ use solana_sysvar::Sysvar;
 
 /// Initializes the global configuration for the operator history program
 pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
+    msg!("Read account");
     let [config, admin, jito_restaking_program, system_program] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
+    msg!("Check account");
+
     load_system_account(config, true)?;
     load_signer(admin, true)?;
     load_system_program(system_program)?;
+
+    msg!("Check config account");
 
     // The Config shall be at the canonical PDA
     let (config_pubkey, config_bump, mut config_seeds) = Config::find_program_address(program_id);
