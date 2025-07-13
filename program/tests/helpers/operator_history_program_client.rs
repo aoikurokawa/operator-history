@@ -68,22 +68,19 @@ impl OperatorHistoryProgramClient {
         Ok(*T::try_from_slice_unchecked(account.data.as_slice())?)
     }
 
+    /// Execute initialize_config instruction
     pub async fn do_initialize_config(&mut self) -> Result<Keypair, TestError> {
-        let operator_history_config_pubkey =
-            Config::find_program_address(&operator_history_program::id()).0;
-        let operator_history_config_admin = Keypair::new();
+        let config_pubkey = Config::find_program_address(&operator_history_program::id()).0;
+        let config_admin = Keypair::new();
 
-        self.airdrop(&operator_history_config_admin.pubkey(), 1.0)
+        self.airdrop(&config_admin.pubkey(), 1.0).await?;
+        self.initialize_config(&config_pubkey, &config_admin)
             .await?;
-        self.initialize_config(
-            &operator_history_config_pubkey,
-            &operator_history_config_admin,
-        )
-        .await?;
 
-        Ok(operator_history_config_admin)
+        Ok(config_admin)
     }
 
+    /// Initialize config
     pub async fn initialize_config(
         &mut self,
         config: &Pubkey,

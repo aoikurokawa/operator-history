@@ -14,26 +14,33 @@ use solana_sysvar::Sysvar;
 
 /// Initializes the global configuration for the operator history program
 pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
-    let [config, admin, jito_restaking_program, system_program] = accounts else {
+    msg!("Read account");
+    let [config_info, admin_info, jito_restaking_program, system_program] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
-    load_system_account(config, true)?;
-    load_signer(admin, true)?;
+    msg!("Check account");
+
+    load_system_account(config_info, true)?;
+    msg!("After Checking system account");
+    load_signer(admin_info, true)?;
+    msg!("After signer account");
     load_system_program(system_program)?;
+
+    msg!("Check config account");
 
     // The Config shall be at the canonical PDA
     let (config_pubkey, config_bump, mut config_seeds) = Config::find_program_address(program_id);
     config_seeds.push(vec![config_bump]);
-    if config.key.ne(&config_pubkey) {
+    if config_info.key.ne(&config_pubkey) {
         msg!("Config account is not at the correct PDA");
         return Err(ProgramError::InvalidAccountData);
     }
 
-    msg!("Initializing config at address {}", config.key);
+    msg!("Initializing config at address {}", config_info.key);
     create_account(
-        admin,
-        config,
+        admin_info,
+        config_info,
         system_program,
         program_id,
         &Rent::get()?,
@@ -43,10 +50,10 @@ pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) 
         &config_seeds,
     )?;
 
-    let mut config_data = config.try_borrow_mut_data()?;
+    let mut config_data = config_info.try_borrow_mut_data()?;
     config_data[0] = Config::DISCRIMINATOR;
     let config = Config::try_from_slice_unchecked_mut(&mut config_data)?;
-    *config = Config::new(*jito_restaking_program.key, *admin.key, config_bump);
+    *config = Config::new(*jito_restaking_program.key, *admin_info.key, config_bump);
 
     Ok(())
 }
