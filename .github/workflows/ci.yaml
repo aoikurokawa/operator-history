@@ -119,8 +119,6 @@ jobs:
       - name: Building programs
         run: cargo-build-sbf
         env:
-          RESTAKING_PROGRAM_ID: RestkWeAVL8fRGgzhfeoqFhsqKRchg6aa1XrcH96z4Q
-          VAULT_PROGRAM_ID: Vau1t6sLNxnzB7ZDsef8TLbPLfyZMYXH8WTNqUdm9g8
           OPERATOR_HISTORY_PROGRAM_ID: E8AdDt8yH1E5QKSqzxofbzqAheWELXXM2fNBr44jGw1w
 
   verified_build:
