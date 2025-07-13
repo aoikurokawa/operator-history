@@ -1,0 +1,101 @@
+use jito_bytemuck::AccountDeserialize;
+use operator_history_core::config::Config;
+use operator_history_sdk::sdk::initialize_config;
+use solana_commitment_config::CommitmentLevel;
+use solana_keypair::Keypair;
+use solana_native_token::sol_str_to_lamports;
+use solana_program_test::BanksClient;
+use solana_pubkey::Pubkey;
+use solana_signer::Signer;
+use solana_system_interface::instruction::transfer;
+use solana_transaction::Transaction;
+
+use super::TestError;
+
+pub struct OperatorHistoryProgramClient {
+    banks_client: BanksClient,
+    payer: Keypair,
+}
+
+impl OperatorHistoryProgramClient {
+    /// Construct new `OperatorHistoryProgramClient`
+    pub const fn new(banks_client: BanksClient, payer: Keypair) -> Self {
+        Self {
+            banks_client,
+            payer,
+        }
+    }
+
+    pub async fn airdrop(&mut self, to: &Pubkey, sol: f64) -> Result<(), TestError> {
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.banks_client
+            .process_transaction_with_preflight_and_commitment(
+                Transaction::new_signed_with_payer(
+                    &[transfer(
+                        &self.payer.pubkey(),
+                        to,
+                        sol_str_to_lamports(&sol.to_string()).unwrap(),
+                    )],
+                    Some(&self.payer.pubkey()),
+                    &[&self.payer],
+                    blockhash,
+                ),
+                CommitmentLevel::Processed,
+            )
+            .await?;
+        Ok(())
+    }
+
+    /// Process the transaction
+    pub async fn process_transaction(&mut self, tx: &Transaction) -> Result<(), TestError> {
+        self.banks_client
+            .process_transaction_with_preflight_and_commitment(
+                tx.clone(),
+                CommitmentLevel::Processed,
+            )
+            .await?;
+        Ok(())
+    }
+
+    pub async fn do_initialize_config(&mut self) -> Result<Keypair, TestError> {
+        let operator_history_config_pubkey =
+            Config::find_program_address(&operator_history_program::id()).0;
+        let operator_history_config_admin = Keypair::new();
+
+        self.airdrop(&operator_history_config_admin.pubkey(), 1.0)
+            .await?;
+        self.initialize_config(
+            &operator_history_config_pubkey,
+            &operator_history_config_admin,
+        )
+        .await?;
+
+        Ok(operator_history_config_admin)
+    }
+
+    pub async fn initialize_config(
+        &mut self,
+        config: &Pubkey,
+        config_admin: &Keypair,
+    ) -> Result<(), TestError> {
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[initialize_config(
+                &operator_history_program::id(),
+                config,
+                &config_admin.pubkey(),
+                &jito_vault_program::id(),
+            )],
+            Some(&config_admin.pubkey()),
+            &[config_admin],
+            blockhash,
+        ))
+        .await
+    }
+
+    /// Get `Config` account
+    pub async fn get_config(&mut self, account: &Pubkey) -> Result<Config, TestError> {
+        let account = self.banks_client.get_account(*account).await?.unwrap();
+        Ok(*Config::try_from_slice_unchecked(account.data.as_slice())?)
+    }
+}

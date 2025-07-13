@@ -37,6 +37,16 @@ impl Config {
         }
     }
 
+    /// Jito Vault Program ID
+    pub const fn jito_vault_program_id(&self) -> Pubkey {
+        self.jito_vault_program_id
+    }
+
+    /// Admin pubkey
+    pub const fn admin(&self) -> Pubkey {
+        self.admin
+    }
+
     /// Returns the seeds for the PDA
     pub fn seeds() -> Vec<Vec<u8>> {
         vec![b"config".to_vec()]

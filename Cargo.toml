@@ -1,7 +1,6 @@
 [workspace]
 members = [
 	"core",
-	"integration-tests",
 	"program",
 	"sdk"
 ]
@@ -13,24 +12,33 @@ bytemuck = { version = "1.16.3", features = ["derive", "min_const_generics"] }
 jito-account-traits-derive = { package = "jito-account-traits-derive", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
 jito-bytemuck = { package = "jito-bytemuck", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
 jito-jsm-core = { package = "jito-jsm-core", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
-mollusk-svm = "0.4.0"
+jito-vault-program = { package = "jito-vault-program", git = "https://github.com/jito-foundation/restaking", rev = "175b594f24c8913448942685c7345f7521dd0a41" }
 operator-history-core = { path = "core", version = "0.1.0" }
 operator-history-sdk = { path = "sdk", version = "0.1.0" }
 shank = "0.4.2"
 shank_idl = "0.4.2"
 solana-account = "2.2.1"
 solana-account-info = "2.2.1"
+solana-commitment-config = "2.2.1"
 solana-decode-error = "2.2.1"
 solana-instruction = "2.2.1"
+solana-keypair = "2.2.1"
 solana-msg = "2.2.1"
+solana-native-token = "2.2.1"
 solana-program = "2.2.1"
 solana-program-entrypoint = "2.2.1"
 solana-program-error = "2.2.1"
+solana-program-test = "2.2.1"
 solana-pubkey = "2.2.1"
 solana-rent = "2.2.1"
+solana-signature = "2.2.1"
+solana-signer = "2.2.1"
 solana-system-interface = "1.0"
 solana-sysvar = "2.2.1"
+solana-transaction = "2.2.1"
+test-case = "3.3"
 thiserror = "1.0.57"
+tokio = { version = "1.36.0", features = ["macros"] }
 
 [workspace.lints.rust.unexpected_cfgs]
 level = "warn"
