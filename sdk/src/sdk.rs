@@ -24,3 +24,26 @@ pub fn initialize_config(
             .unwrap(),
     }
 }
+
+pub fn initialize_operator_history_account(
+    program_id: &Pubkey,
+    config: &Pubkey,
+    operator_history: &Pubkey,
+    operator: &Pubkey,
+    payer: &Pubkey,
+) -> Instruction {
+    let accounts = vec![
+        AccountMeta::new_readonly(*config, false),
+        AccountMeta::new(*operator_history, false),
+        AccountMeta::new_readonly(*operator, false),
+        AccountMeta::new(*payer, true),
+        AccountMeta::new_readonly(solana_system_interface::program::id(), false),
+    ];
+    Instruction {
+        program_id: *program_id,
+        accounts,
+        data: OperatorHistoryInstruction::InitializeOperatorHistoryAccount
+            .try_to_vec()
+            .unwrap(),
+    }
+}

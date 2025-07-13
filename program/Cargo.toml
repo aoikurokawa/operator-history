@@ -41,6 +41,8 @@ solana-sysvar = { workspace = true }
 
 [dev-dependencies]
 jito-restaking-program = { workspace = true }
+jito-restaking-sdk = { workspace = true }
+jito-vault-program = { workspace = true }
 solana-account = { workspace = true }
 solana-commitment-config = { workspace = true }
 solana-instruction = { workspace = true }
