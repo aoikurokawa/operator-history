@@ -29,17 +29,18 @@ pub struct TestBuilder {
 
 impl TestBuilder {
     pub async fn new() -> Self {
-        let mut program_test = ProgramTest::new(
+        let mut program_test = ProgramTest::default();
+        program_test.add_program(
             "operator_history_program",
             operator_history_program::id(),
             processor!(operator_history_program::process_instruction),
         );
-        program_test.prefer_bpf(true);
         program_test.add_program(
             "jito_restaking_program",
             jito_restaking_program::id(),
             processor!(jito_restaking_program::process_instruction),
         );
+        // program_test.prefer_bpf(true);
 
         let context = program_test.start_with_context().await;
         Self { context }
