@@ -42,7 +42,7 @@ solana-sysvar = "2.2.1"
 solana-transaction = "2.2.1"
 test-case = "3.3"
 thiserror = "1.0.57"
-tokio = { version = "1.36.0", features = ["macros"] }
+tokio = { version = "1.46.1", features = ["macros"] }
 
 [workspace.lints.rust.unexpected_cfgs]
 level = "warn"

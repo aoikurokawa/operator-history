@@ -35,7 +35,11 @@ impl TestBuilder {
             processor!(operator_history_program::process_instruction),
         );
         program_test.prefer_bpf(true);
-        program_test.add_program("jito_restaking_program", jito_restaking_program::id(), None);
+        program_test.add_program(
+            "jito_restaking_program",
+            jito_restaking_program::id(),
+            processor!(jito_restaking_program::process_instruction),
+        );
 
         let context = program_test.start_with_context().await;
         Self { context }
