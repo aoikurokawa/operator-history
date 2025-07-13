@@ -1,8 +1,9 @@
 use jito_bytemuck::{AccountDeserialize, Discriminator};
 use jito_jsm_core::{
     create_account,
-    loader::{load_signer, load_system_account, load_system_program},
+    loader::{load_signer, load_system_program},
 };
+// load_system_account
 use operator_history_core::config::Config;
 use operator_history_sdk::error::OperatorHistoryError;
 use solana_account_info::AccountInfo;
@@ -21,7 +22,7 @@ pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) 
 
     msg!("Check account");
 
-    load_system_account(config_info, true)?;
+    // load_system_account(config_info, true)?;
     msg!("After Checking system account");
     load_signer(admin_info, true)?;
     msg!("After signer account");
