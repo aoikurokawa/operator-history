@@ -6,7 +6,6 @@ use jito_restaking_core::{
     operator::Operator, operator_vault_ticket::OperatorVaultTicket,
 };
 use jito_restaking_sdk::{
-    error::RestakingError,
     instruction::OperatorAdminRole,
     sdk::{
         cooldown_ncn_vault_ticket, initialize_config, initialize_ncn,
@@ -30,12 +29,14 @@ use solana_transaction::Transaction;
 use super::TestError;
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub struct NcnRoot {
     pub ncn_pubkey: Pubkey,
     pub ncn_admin: Keypair,
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub struct OperatorRoot {
     pub operator_pubkey: Pubkey,
     pub operator_admin: Keypair,
@@ -43,10 +44,12 @@ pub struct OperatorRoot {
 
 pub struct RestakingProgramClient {
     banks_client: BanksClient,
+    #[allow(dead_code)]
     payer: Keypair,
 }
 
 impl RestakingProgramClient {
+    #[allow(dead_code)]
     pub const fn new(banks_client: BanksClient, payer: Keypair) -> Self {
         Self {
             banks_client,
@@ -54,6 +57,7 @@ impl RestakingProgramClient {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn get_ncn(&mut self, ncn: &Pubkey) -> Result<Ncn, TestError> {
         let account = self
             .banks_client
@@ -64,11 +68,13 @@ impl RestakingProgramClient {
         Ok(*Ncn::try_from_slice_unchecked(account.data.as_slice())?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_config(&mut self, account: &Pubkey) -> Result<Config, TestError> {
         let account = self.banks_client.get_account(*account).await?.unwrap();
         Ok(*Config::try_from_slice_unchecked(account.data.as_slice())?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_ncn_vault_ticket(
         &mut self,
         ncn: &Pubkey,
@@ -82,6 +88,7 @@ impl RestakingProgramClient {
         )?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_ncn_operator_state(
         &mut self,
         ncn: &Pubkey,
@@ -95,6 +102,7 @@ impl RestakingProgramClient {
         )?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_ncn_vault_slasher_ticket(
         &mut self,
         ncn: &Pubkey,
@@ -114,6 +122,7 @@ impl RestakingProgramClient {
         )?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_operator(&mut self, account: &Pubkey) -> Result<Operator, TestError> {
         let account = self.banks_client.get_account(*account).await?.unwrap();
         Ok(*Operator::try_from_slice_unchecked(
@@ -121,6 +130,7 @@ impl RestakingProgramClient {
         )?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_operator_vault_ticket(
         &mut self,
         operator: &Pubkey,
@@ -152,6 +162,7 @@ impl RestakingProgramClient {
         )?)
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_config(&mut self) -> Result<Keypair, TestError> {
         let restaking_config_pubkey = Config::find_program_address(&jito_restaking_program::id()).0;
         let restaking_config_admin = Keypair::new();
@@ -163,6 +174,7 @@ impl RestakingProgramClient {
         Ok(restaking_config_admin)
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_operator(&mut self) -> Result<OperatorRoot, TestError> {
         // create operator + add operator vault
         let operator_base = Keypair::new();
@@ -185,6 +197,7 @@ impl RestakingProgramClient {
         })
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_operator_vault_ticket(
         &mut self,
         operator_root: &OperatorRoot,
@@ -209,6 +222,7 @@ impl RestakingProgramClient {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn do_warmup_operator_vault_ticket(
         &mut self,
         operator_root: &OperatorRoot,
@@ -276,6 +290,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_ncn(&mut self) -> Result<NcnRoot, TestError> {
         let ncn_admin = Keypair::new();
         let ncn_base = Keypair::new();
@@ -298,6 +313,7 @@ impl RestakingProgramClient {
         })
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_ncn_vault_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -321,6 +337,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_warmup_ncn_vault_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -368,6 +385,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_cooldown_ncn_vault_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -389,6 +407,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn cooldown_ncn_vault_ticket(
         &mut self,
         config: &Pubkey,
@@ -415,6 +434,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_ncn_warmup_operator(
         &mut self,
         ncn_root: &NcnRoot,
@@ -435,6 +455,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_ncn_cooldown_operator(
         &mut self,
         ncn_root: &NcnRoot,
@@ -455,6 +476,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn ncn_cooldown_operator(
         &mut self,
         config: &Pubkey,
@@ -507,6 +529,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_operator_warmup_ncn(
         &mut self,
         operator_root: &OperatorRoot,
@@ -527,6 +550,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn operator_warmup_ncn(
         &mut self,
         config: &Pubkey,
@@ -553,6 +577,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_operator_cooldown_ncn(
         &mut self,
         operator_root: &OperatorRoot,
@@ -599,6 +624,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_ncn_operator_state(
         &mut self,
         ncn_root: &NcnRoot,
@@ -622,6 +648,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_ncn_vault_slasher_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -657,6 +684,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_warmup_ncn_vault_slasher_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -833,6 +861,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn ncn_set_admin(
         &mut self,
         ncn: &Pubkey,
@@ -855,6 +884,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn operator_set_admin(
         &mut self,
         operator: &Pubkey,
@@ -877,6 +907,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn operator_set_secondary_admin(
         &mut self,
         operator: &Pubkey,
@@ -955,6 +986,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn operator_set_fee(
         &mut self,
         config: &Pubkey,
@@ -979,6 +1011,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn ncn_delegate_token_account(
         &mut self,
         ncn_pubkey: &Pubkey,
@@ -1006,6 +1039,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn operator_delegate_token_account(
         &mut self,
         operator_pubkey: &Pubkey,
@@ -1063,6 +1097,7 @@ impl RestakingProgramClient {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn set_config_admin(
         &mut self,
         config: &Pubkey,

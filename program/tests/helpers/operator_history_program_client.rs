@@ -2,7 +2,6 @@ use operator_history_core::{config::Config, operator_history::OperatorHistory};
 use operator_history_sdk::sdk::{
     initialize_config, initialize_operator_history_account, realloc_operator_history_account,
 };
-use solana_account::Account;
 use solana_commitment_config::CommitmentLevel;
 use solana_keypair::Keypair;
 use solana_native_token::sol_str_to_lamports;
@@ -60,6 +59,7 @@ impl OperatorHistoryProgramClient {
     }
 
     /// Get operator history program account
+    #[allow(dead_code)]
     pub async fn get_account<T>(&mut self, account: &Pubkey) -> Result<T, TestError>
     where
         T: jito_bytemuck::AccountDeserialize,
@@ -104,6 +104,7 @@ impl OperatorHistoryProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_operator_history_account(
         &mut self,
         operator: &Pubkey,
@@ -125,6 +126,7 @@ impl OperatorHistoryProgramClient {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn initialize_operator_history_account(
         &mut self,
         config: &Pubkey,
@@ -148,6 +150,7 @@ impl OperatorHistoryProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_realloc_operator_history_account(
         &mut self,
         operator: &Pubkey,
@@ -164,6 +167,7 @@ impl OperatorHistoryProgramClient {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn realloc_operator_history_account(
         &mut self,
         config: &Pubkey,

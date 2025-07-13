@@ -41,6 +41,7 @@ impl TestBuilder {
         Self { context }
     }
 
+    #[allow(dead_code)]
     pub fn jito_restaking_program_client(&self) -> RestakingProgramClient {
         RestakingProgramClient::new(
             self.context.banks_client.clone(),
@@ -78,6 +79,7 @@ impl TestBuilder {
     }
 
     /// Get operator history program account
+    #[allow(dead_code)]
     pub async fn get_raw_account(
         &mut self,
         account: &Pubkey,

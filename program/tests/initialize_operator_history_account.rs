@@ -1,6 +1,5 @@
 use helpers::TestBuilder;
-use operator_history_core::{config::Config, operator_history::OperatorHistory, MAX_REALLOC_BYTES};
-use solana_signer::Signer;
+use operator_history_core::{operator_history::OperatorHistory, MAX_REALLOC_BYTES};
 
 mod helpers;
 
@@ -43,25 +42,4 @@ async fn initialize_operator_history_account() {
     assert_eq!(raw_account.data.len(), MAX_REALLOC_BYTES as usize);
     assert_eq!(raw_account.owner, operator_history_program::id());
     assert_eq!(raw_account.data[0], 0);
-
-    //     operator_history_program_client
-    //         .do_realloc_operator_history_account(&operator_root.operator_pubkey)
-    //         .await
-    //         .unwrap();
-    //
-    //     let operator_history = OperatorHistory::find_program_address(
-    //         &operator_history_program::id(),
-    //         &operator_root.operator_pubkey,
-    //     )
-    //     .0;
-    //     let operator_history: OperatorHistory = operator_history_program_client
-    //         .get_account(&operator_history)
-    //         .await
-    //         .unwrap();
-    //
-    // assert_eq!(config.admin(), config_admin.pubkey());
-    // assert_eq!(
-    //     config.jito_restaking_program_id(),
-    //     jito_restaking_program::id()
-    // );
 }
