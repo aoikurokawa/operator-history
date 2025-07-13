@@ -72,14 +72,14 @@ pub fn process_realloc_operator_history_account(
     let should_initialize = operator_history_info.data_len() > OperatorHistory::SIZE
         && operator_history_info.try_borrow_data()?[0] != OperatorHistory::DISCRIMINATOR;
 
-    if should_initialize {
-        let mut operator_history_data = operator_history_info.try_borrow_mut_data()?;
-        operator_history_data[0] = OperatorHistory::DISCRIMINATOR;
-        let operator_history =
-            OperatorHistory::try_from_slice_unchecked_mut(&mut operator_history_data)?;
-        *operator_history =
-            OperatorHistory::new(*operator_info.key, operator.index(), operator_history_bump);
-    }
+    // if should_initialize {
+    //     let mut operator_history_data = operator_history_info.try_borrow_mut_data()?;
+    //     operator_history_data[0] = OperatorHistory::DISCRIMINATOR;
+    //     let operator_history =
+    //         OperatorHistory::try_from_slice_unchecked_mut(&mut operator_history_data)?;
+    //     *operator_history =
+    //         OperatorHistory::new(*operator_info.key, operator.index(), operator_history_bump);
+    // }
 
     Ok(())
 }
