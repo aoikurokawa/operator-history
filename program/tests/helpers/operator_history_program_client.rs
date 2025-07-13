@@ -1,6 +1,7 @@
-use jito_bytemuck::AccountDeserialize;
-use operator_history_core::config::Config;
-use operator_history_sdk::sdk::initialize_config;
+use operator_history_core::{config::Config, operator_history::OperatorHistory};
+use operator_history_sdk::sdk::{
+    initialize_config, initialize_operator_history_account, realloc_operator_history_account,
+};
 use solana_commitment_config::CommitmentLevel;
 use solana_keypair::Keypair;
 use solana_native_token::sol_str_to_lamports;
@@ -57,6 +58,16 @@ impl OperatorHistoryProgramClient {
         Ok(())
     }
 
+    /// Get operator history program account
+    #[allow(dead_code)]
+    pub async fn get_account<T>(&mut self, account: &Pubkey) -> Result<T, TestError>
+    where
+        T: jito_bytemuck::AccountDeserialize,
+    {
+        let account = self.banks_client.get_account(*account).await?.unwrap();
+        Ok(*T::try_from_slice_unchecked(account.data.as_slice())?)
+    }
+
     pub async fn do_initialize_config(&mut self) -> Result<Keypair, TestError> {
         let operator_history_config_pubkey =
             Config::find_program_address(&operator_history_program::id()).0;
@@ -84,7 +95,7 @@ impl OperatorHistoryProgramClient {
                 &operator_history_program::id(),
                 config,
                 &config_admin.pubkey(),
-                &jito_vault_program::id(),
+                &jito_restaking_program::id(),
             )],
             Some(&config_admin.pubkey()),
             &[config_admin],
@@ -93,9 +104,90 @@ impl OperatorHistoryProgramClient {
         .await
     }
 
-    /// Get `Config` account
-    pub async fn get_config(&mut self, account: &Pubkey) -> Result<Config, TestError> {
-        let account = self.banks_client.get_account(*account).await?.unwrap();
-        Ok(*Config::try_from_slice_unchecked(account.data.as_slice())?)
+    #[allow(dead_code)]
+    pub async fn do_initialize_operator_history_account(
+        &mut self,
+        operator: &Pubkey,
+    ) -> Result<(), TestError> {
+        let config = Config::find_program_address(&operator_history_program::id()).0;
+        let operator_history_pubkey =
+            OperatorHistory::find_program_address(&operator_history_program::id(), operator).0;
+        let payer = Keypair::new();
+
+        self.airdrop(&payer.pubkey(), 100.0).await?;
+        self.initialize_operator_history_account(
+            &config,
+            &operator_history_pubkey,
+            &operator,
+            &payer,
+        )
+        .await?;
+
+        Ok(())
+    }
+
+    #[allow(dead_code)]
+    pub async fn initialize_operator_history_account(
+        &mut self,
+        config: &Pubkey,
+        operator_history: &Pubkey,
+        operator: &Pubkey,
+        payer: &Keypair,
+    ) -> Result<(), TestError> {
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[initialize_operator_history_account(
+                &operator_history_program::id(),
+                config,
+                &operator_history,
+                &operator,
+                &payer.pubkey(),
+            )],
+            Some(&payer.pubkey()),
+            &[payer],
+            blockhash,
+        ))
+        .await
+    }
+
+    #[allow(dead_code)]
+    pub async fn do_realloc_operator_history_account(
+        &mut self,
+        operator: &Pubkey,
+    ) -> Result<(), TestError> {
+        let config = Config::find_program_address(&operator_history_program::id()).0;
+        let operator_history_pubkey =
+            OperatorHistory::find_program_address(&operator_history_program::id(), operator).0;
+        let payer = Keypair::new();
+
+        self.airdrop(&payer.pubkey(), 100.0).await?;
+        self.realloc_operator_history_account(&config, &operator_history_pubkey, &operator, &payer)
+            .await?;
+
+        Ok(())
+    }
+
+    #[allow(dead_code)]
+    pub async fn realloc_operator_history_account(
+        &mut self,
+        config: &Pubkey,
+        operator_history: &Pubkey,
+        operator: &Pubkey,
+        payer: &Keypair,
+    ) -> Result<(), TestError> {
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[realloc_operator_history_account(
+                &operator_history_program::id(),
+                config,
+                &operator_history,
+                &operator,
+                &payer.pubkey(),
+            )],
+            Some(&payer.pubkey()),
+            &[payer],
+            blockhash,
+        ))
+        .await
     }
 }

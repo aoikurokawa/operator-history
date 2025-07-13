@@ -1,15 +1,16 @@
 use borsh::BorshDeserialize;
 use initialize_config::process_initialize_config;
+use initialize_operator_history_account::process_initialize_operator_history_account;
 use operator_history_sdk::instruction::OperatorHistoryInstruction;
-// use solana_program::{declare_id, entrypoint::ProgramResult, msg, program_error::ProgramError, pubkey::Pubkey, account_info::AccountInfo};
-// #[cfg(not(feature = "no-entrypoint"))]
-// use solana_program::entrypoint;
+use realloc_operator_history_account::process_realloc_operator_history_account;
 use solana_account_info::AccountInfo;
 use solana_msg::msg;
 use solana_program_error::{ProgramError, ProgramResult};
 use solana_pubkey::Pubkey;
 
 mod initialize_config;
+mod initialize_operator_history_account;
+mod realloc_operator_history_account;
 
 solana_pubkey::declare_id!(env!("OPERATOR_HISTORY_PROGRAM_ID"));
 
@@ -31,6 +32,14 @@ pub fn process_instruction(
         OperatorHistoryInstruction::InitializeConfig => {
             msg!("Instruction: InitializeConfig");
             process_initialize_config(program_id, accounts)
+        }
+        OperatorHistoryInstruction::InitializeOperatorHistoryAccount => {
+            msg!("Instruction: InitializeOperatorHistoryAccount");
+            process_initialize_operator_history_account(program_id, accounts)
+        }
+        OperatorHistoryInstruction::ReallocOperatorHistoryAccount => {
+            msg!("Instruction: ReallocOperatorHistoryAccount");
+            process_realloc_operator_history_account(program_id, accounts)
         }
     }
 }

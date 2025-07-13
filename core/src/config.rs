@@ -13,8 +13,8 @@ const RESERVED_SPACE_LEN: usize = 288;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Pod, Zeroable, AccountDeserialize, ShankAccount)]
 #[repr(C)]
 pub struct Config {
-    /// The jito vault program id
-    jito_vault_program_id: Pubkey,
+    /// The jito restaking program id
+    jito_restaking_program_id: Pubkey,
 
     /// The pubkey of admin
     admin: Pubkey,
@@ -28,18 +28,18 @@ pub struct Config {
 
 impl Config {
     /// Construct new config
-    pub const fn new(jito_vault_program_id: Pubkey, admin: Pubkey, bump: u8) -> Self {
+    pub const fn new(jito_restaking_program_id: Pubkey, admin: Pubkey, bump: u8) -> Self {
         Self {
-            jito_vault_program_id,
+            jito_restaking_program_id,
             admin,
             bump,
             reserved: [0; RESERVED_SPACE_LEN],
         }
     }
 
-    /// Jito Vault Program ID
-    pub const fn jito_vault_program_id(&self) -> Pubkey {
-        self.jito_vault_program_id
+    /// Jito Restaking Program ID
+    pub const fn jito_restaking_program_id(&self) -> Pubkey {
+        self.jito_restaking_program_id
     }
 
     /// Admin pubkey

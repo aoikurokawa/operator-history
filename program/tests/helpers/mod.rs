@@ -1,4 +1,6 @@
 use operator_history_program_client::OperatorHistoryProgramClient;
+use restaking_program_client::RestakingProgramClient;
+use solana_account::Account;
 use solana_commitment_config::CommitmentLevel;
 use solana_native_token::sol_str_to_lamports;
 use solana_program_error::ProgramError;
@@ -10,6 +12,7 @@ use solana_transaction::Transaction;
 use thiserror::Error;
 
 mod operator_history_program_client;
+mod restaking_program_client;
 
 #[derive(Debug, Error)]
 pub enum TestError {
@@ -26,16 +29,28 @@ pub struct TestBuilder {
 
 impl TestBuilder {
     pub async fn new() -> Self {
-        let program_test = ProgramTest::new(
+        let mut program_test = ProgramTest::default();
+        program_test.add_program(
             "operator_history_program",
             operator_history_program::id(),
             processor!(operator_history_program::process_instruction),
         );
-        // program_test.prefer_bpf(true);
-        // program_test.add_program("mpl_token_metadata", inline_mpl_token_metadata::id(), None);
+        program_test.add_program(
+            "jito_restaking_program",
+            jito_restaking_program::id(),
+            processor!(jito_restaking_program::process_instruction),
+        );
 
         let context = program_test.start_with_context().await;
         Self { context }
+    }
+
+    #[allow(dead_code)]
+    pub fn jito_restaking_program_client(&self) -> RestakingProgramClient {
+        RestakingProgramClient::new(
+            self.context.banks_client.clone(),
+            self.context.payer.insecure_clone(),
+        )
     }
 
     pub fn operator_history_program_client(&self) -> OperatorHistoryProgramClient {
@@ -65,5 +80,18 @@ impl TestBuilder {
                 CommitmentLevel::Processed,
             )
             .await
+    }
+
+    /// Get operator history program account
+    #[allow(dead_code)]
+    pub async fn get_raw_account(
+        &mut self,
+        account: &Pubkey,
+    ) -> Result<Option<Account>, TestError> {
+        self.context
+            .banks_client
+            .get_account(*account)
+            .await
+            .map_err(|e| TestError::BanksClientError(e))
     }
 }
