@@ -59,6 +59,7 @@ impl OperatorHistoryProgramClient {
     }
 
     /// Get operator history program account
+    #[allow(dead_code)]
     pub async fn get_account<T>(&mut self, account: &Pubkey) -> Result<T, TestError>
     where
         T: jito_bytemuck::AccountDeserialize,
@@ -148,6 +149,7 @@ impl OperatorHistoryProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_realloc_operator_history_account(
         &mut self,
         operator: &Pubkey,
@@ -164,6 +166,7 @@ impl OperatorHistoryProgramClient {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn realloc_operator_history_account(
         &mut self,
         config: &Pubkey,
