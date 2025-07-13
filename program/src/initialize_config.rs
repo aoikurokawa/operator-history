@@ -19,15 +19,9 @@ pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) 
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
-    msg!("Check account");
-
     load_system_account(config_info, true)?;
-    msg!("After Checking system account");
     load_signer(admin_info, true)?;
-    msg!("After signer account");
     load_system_program(system_program)?;
-
-    msg!("Check config account");
 
     // The Config shall be at the canonical PDA
     let (config_pubkey, config_bump, mut config_seeds) = Config::find_program_address(program_id);
