@@ -145,7 +145,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: operator_history_program.so
-          path: target/deploy/operator_history_program.so
+          path: target/sbf-solana-solana/release/operator_history_program.so
 
   # coverage:
   #   name: coverage
