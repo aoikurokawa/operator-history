@@ -32,11 +32,14 @@ operator-history-core = { workspace = true }
 operator-history-sdk = { workspace = true }
 solana-account-info = { workspace = true }
 solana-decode-error = { workspace = true }
+solana-invoke = { workspace = true }
 solana-msg = { workspace = true }
+solana-program = { workspace = true }
 solana-program-entrypoint = { workspace = true }
 solana-program-error = { workspace = true }
 solana-pubkey = { workspace = true }
 solana-rent = { workspace = true }
+solana-system-interface = { workspace = true }
 solana-sysvar = { workspace = true }
 
 [dev-dependencies]
@@ -52,7 +55,6 @@ solana-program-test = { workspace = true }
 solana-pubkey = { workspace = true }
 solana-signature = { workspace = true }
 solana-signer = { workspace = true }
-solana-system-interface = { workspace = true }
 solana-transaction = { workspace = true }
 test-case = { workspace = true }
 thiserror = { workspace = true }

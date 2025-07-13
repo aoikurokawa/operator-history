@@ -1,6 +1,8 @@
-use jito_bytemuck::AccountDeserialize;
 use operator_history_core::{config::Config, operator_history::OperatorHistory};
-use operator_history_sdk::sdk::{initialize_config, initialize_operator_history_account};
+use operator_history_sdk::sdk::{
+    initialize_config, initialize_operator_history_account, realloc_operator_history_account,
+};
+use solana_account::Account;
 use solana_commitment_config::CommitmentLevel;
 use solana_keypair::Keypair;
 use solana_native_token::sol_str_to_lamports;
@@ -133,6 +135,45 @@ impl OperatorHistoryProgramClient {
         let blockhash = self.banks_client.get_latest_blockhash().await?;
         self.process_transaction(&Transaction::new_signed_with_payer(
             &[initialize_operator_history_account(
+                &operator_history_program::id(),
+                config,
+                &operator_history,
+                &operator,
+                &payer.pubkey(),
+            )],
+            Some(&payer.pubkey()),
+            &[payer],
+            blockhash,
+        ))
+        .await
+    }
+
+    pub async fn do_realloc_operator_history_account(
+        &mut self,
+        operator: &Pubkey,
+    ) -> Result<(), TestError> {
+        let config = Config::find_program_address(&operator_history_program::id()).0;
+        let operator_history_pubkey =
+            OperatorHistory::find_program_address(&operator_history_program::id(), operator).0;
+        let payer = Keypair::new();
+
+        self.airdrop(&payer.pubkey(), 100.0).await?;
+        self.realloc_operator_history_account(&config, &operator_history_pubkey, &operator, &payer)
+            .await?;
+
+        Ok(())
+    }
+
+    pub async fn realloc_operator_history_account(
+        &mut self,
+        config: &Pubkey,
+        operator_history: &Pubkey,
+        operator: &Pubkey,
+        payer: &Keypair,
+    ) -> Result<(), TestError> {
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[realloc_operator_history_account(
                 &operator_history_program::id(),
                 config,
                 &operator_history,

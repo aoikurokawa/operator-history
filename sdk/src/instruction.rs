@@ -17,4 +17,12 @@ pub enum OperatorHistoryInstruction {
     #[account(3, writable, signer, name = "payer")]
     #[account(4, name = "system_program")]
     InitializeOperatorHistoryAccount,
+
+    /// Reallocate the operator history account
+    #[account(0, name = "config")]
+    #[account(1, writable, name = "operator_history")]
+    #[account(2, name = "operator")]
+    #[account(3, writable, signer, name = "payer")]
+    #[account(4, name = "system_program")]
+    ReallocOperatorHistoryAccount,
 }

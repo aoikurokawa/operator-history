@@ -1,5 +1,6 @@
 use operator_history_program_client::OperatorHistoryProgramClient;
 use restaking_program_client::RestakingProgramClient;
+use solana_account::Account;
 use solana_commitment_config::CommitmentLevel;
 use solana_native_token::sol_str_to_lamports;
 use solana_program_error::ProgramError;
@@ -74,5 +75,17 @@ impl TestBuilder {
                 CommitmentLevel::Processed,
             )
             .await
+    }
+
+    /// Get operator history program account
+    pub async fn get_raw_account(
+        &mut self,
+        account: &Pubkey,
+    ) -> Result<Option<Account>, TestError> {
+        self.context
+            .banks_client
+            .get_account(*account)
+            .await
+            .map_err(|e| TestError::BanksClientError(e))
     }
 }

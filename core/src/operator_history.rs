@@ -34,6 +34,8 @@ pub struct OperatorHistory {
 }
 
 impl OperatorHistory {
+    pub const SIZE: usize = 8 + size_of::<Self>();
+
     pub fn new(operator_account: Pubkey, index: u64, bump: u8) -> Self {
         Self {
             operator_account,
