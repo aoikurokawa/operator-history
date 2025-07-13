@@ -59,13 +59,14 @@ impl OperatorHistoryProgramClient {
     }
 
     /// Get operator history program account
-    #[allow(dead_code)]
     pub async fn get_account<T>(&mut self, account: &Pubkey) -> Result<T, TestError>
     where
         T: jito_bytemuck::AccountDeserialize,
     {
-        let account = self.banks_client.get_account(*account).await?.unwrap();
-        Ok(*T::try_from_slice_unchecked(account.data.as_slice())?)
+        let raw_account = self.banks_client.get_account(*account).await?.unwrap();
+        let account = *T::try_from_slice_unchecked(raw_account.data.as_slice())?;
+
+        Ok(account)
     }
 
     /// Execute initialize_config instruction
@@ -147,7 +148,6 @@ impl OperatorHistoryProgramClient {
         .await
     }
 
-    #[allow(dead_code)]
     pub async fn do_realloc_operator_history_account(
         &mut self,
         operator: &Pubkey,
@@ -164,7 +164,6 @@ impl OperatorHistoryProgramClient {
         Ok(())
     }
 
-    #[allow(dead_code)]
     pub async fn realloc_operator_history_account(
         &mut self,
         config: &Pubkey,

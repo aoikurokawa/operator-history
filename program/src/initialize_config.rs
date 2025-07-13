@@ -14,7 +14,6 @@ use solana_sysvar::Sysvar;
 
 /// Initializes the global configuration for the operator history program
 pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
-    msg!("Read account");
     let [config_info, admin_info, jito_restaking_program, system_program] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };

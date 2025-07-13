@@ -69,7 +69,7 @@ pub fn process_realloc_operator_history_account(
         operator_history_info.resize(new_size)?;
     }
 
-    let should_initialize = operator_history_info.data_len() > OperatorHistory::SIZE
+    let should_initialize = operator_history_info.data_len() >= OperatorHistory::SIZE
         && operator_history_info.try_borrow_data()?[0] != OperatorHistory::DISCRIMINATOR;
 
     if should_initialize {
@@ -77,8 +77,8 @@ pub fn process_realloc_operator_history_account(
         operator_history_data[0] = OperatorHistory::DISCRIMINATOR;
         let operator_history =
             OperatorHistory::try_from_slice_unchecked_mut(&mut operator_history_data)?;
-        *operator_history =
-            OperatorHistory::new(*operator_info.key, operator.index(), operator_history_bump);
+
+        operator_history.initialize(operator_info.key, operator.index(), operator_history_bump);
     }
 
     Ok(())

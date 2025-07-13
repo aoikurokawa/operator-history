@@ -47,6 +47,35 @@ impl OperatorHistory {
         }
     }
 
+    pub fn initialize(&mut self, operator: &Pubkey, index: u64, bump: u8) {
+        self.operator_account = *operator;
+        self.index = PodU64::from(index);
+        self.struct_version = PodU32::from(0);
+        self.bump = bump;
+        self.history = CircBuf::default();
+        self.reserved_space = [0; 328];
+    }
+
+    /// Operator account
+    pub const fn operator_account(&self) -> Pubkey {
+        self.operator_account
+    }
+
+    /// Index
+    pub fn index(&self) -> u64 {
+        self.index.into()
+    }
+
+    /// Struct version
+    pub fn struct_version(&self) -> u32 {
+        self.struct_version.into()
+    }
+
+    /// History
+    pub const fn history(&self) -> CircBuf {
+        self.history
+    }
+
     /// Returns the seeds for the PDA
     pub fn seeds(operator: &Pubkey) -> Vec<Vec<u8>> {
         vec![b"operator_history".to_vec(), operator.to_bytes().to_vec()]
@@ -71,26 +100,26 @@ impl OperatorHistory {
         expect_writable: bool,
     ) -> Result<(), ProgramError> {
         if account.owner.ne(program_id) {
-            msg!("Config account has an invalid owner");
+            msg!("OperatorHistory account has an invalid owner");
             return Err(ProgramError::InvalidAccountOwner);
         }
         if account.data_is_empty() {
-            msg!("Config account data is empty");
+            msg!("OperatorHistory account data is empty");
             return Err(ProgramError::InvalidAccountData);
         }
         if expect_writable && !account.is_writable {
-            msg!("Config account is not writable");
+            msg!("OperatorHistory account is not writable");
             return Err(ProgramError::InvalidAccountData);
         }
         if account.data.borrow()[0].ne(&Self::DISCRIMINATOR) {
-            msg!("Config account discriminator is invalid");
+            msg!("OperatorHistory account discriminator is invalid");
             return Err(ProgramError::InvalidAccountData);
         }
         if account
             .key
             .ne(&Self::find_program_address(program_id, operator).0)
         {
-            msg!("Config account is not at the correct PDA");
+            msg!("OperatorHistory account is not at the correct PDA");
             return Err(ProgramError::InvalidAccountData);
         }
 
